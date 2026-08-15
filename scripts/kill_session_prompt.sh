@@ -8,5 +8,9 @@ CURRENT_SESSION_ID="$2"
 
 main() {
 	tmux confirm -p "kill-session ${CURRENT_SESSION_NAME}? (y/n)" "run '$CURRENT_DIR/kill_session.sh \'$CURRENT_SESSION_ID''"
+
+	if [ $? -ne 0 ]; then
+		return # do nothing
+	fi
 }
 main
