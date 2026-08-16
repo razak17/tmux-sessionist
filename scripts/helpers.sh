@@ -11,6 +11,10 @@ get_tmux_option() {
 	fi
 }
 
+key_bindings_disabled() {
+	[ "$1" = "false" ]
+}
+
 # Ensures a message is displayed for 5 seconds in tmux prompt.
 # Does not override the 'display-time' tmux option.
 display_message() {

@@ -27,7 +27,8 @@ source "$CURRENT_DIR/scripts/helpers.sh"
 
 # Multiple bindings can be set. Default binding is "g".
 set_goto_session_bindings() {
-	local key_bindings=$(get_tmux_option "$tmux_option_goto" "$default_key_bindings_goto")
+	local key_bindings="$(get_tmux_option "$tmux_option_goto" "$default_key_bindings_goto")"
+	key_bindings_disabled "$key_bindings" && return
 	local key
 	for key in $key_bindings; do
 		tmux bind "$key" run "$CURRENT_DIR/scripts/goto_session.sh"
@@ -35,7 +36,8 @@ set_goto_session_bindings() {
 }
 
 set_alternate_session_binding() {
-	local key_bindings=$(get_tmux_option "$tmux_option_alternate" "$default_key_bindings_alternate")
+	local key_bindings="$(get_tmux_option "$tmux_option_alternate" "$default_key_bindings_alternate")"
+	key_bindings_disabled "$key_bindings" && return
 	local key
 	for key in $key_bindings; do
 		# switch to the last/alternate session
@@ -46,7 +48,8 @@ set_alternate_session_binding() {
 # Prompt for creating a new session. If the session with the same name exists,
 # it will switch to existing session.
 set_new_session_binding() {
-	local key_bindings=$(get_tmux_option "$tmux_option_new" "$default_key_bindings_new")
+	local key_bindings="$(get_tmux_option "$tmux_option_new" "$default_key_bindings_new")"
+	key_bindings_disabled "$key_bindings" && return
 	local key
 	for key in $key_bindings; do
 		tmux bind "$key" run "$CURRENT_DIR/scripts/new_session_prompt.sh"
@@ -55,7 +58,8 @@ set_new_session_binding() {
 
 # "Promote" the current pane to a new session
 set_promote_pane_binding() {
-	local key_bindings=$(get_tmux_option "$tmux_option_promote_pane" "$default_key_bindings_promote_pane")
+	local key_bindings="$(get_tmux_option "$tmux_option_promote_pane" "$default_key_bindings_promote_pane")"
+	key_bindings_disabled "$key_bindings" && return
 	local key
 	for key in $key_bindings; do
 		tmux bind "$key" run "$CURRENT_DIR/scripts/promote_pane.sh '#{session_name}' '#{pane_id}' '#{pane_current_path}'"
@@ -64,7 +68,8 @@ set_promote_pane_binding() {
 
 # "Promote" the current window to a new session
 set_promote_window_binding() {
-	local key_bindings=$(get_tmux_option "$tmux_option_promote_window" "$default_key_bindings_promote_window")
+	local key_bindings="$(get_tmux_option "$tmux_option_promote_window" "$default_key_bindings_promote_window")"
+	key_bindings_disabled "$key_bindings" && return
 	local key
 	for key in $key_bindings; do
 		tmux bind "$key" run "$CURRENT_DIR/scripts/promote_window.sh '#{session_name}' '#{window_id}' '#{window_name}' '#{pane_current_path}'"
@@ -93,17 +98,19 @@ KEY_FLAGS
 # "Join" the marked pane to the current session/window
 set_join_pane_binding() {
 	local key_bindings="$(get_tmux_option "$tmux_option_join_pane" "$default_key_bindings_join_pane")"
+	key_bindings_disabled "$key_bindings" && return
 	local key
 	local secondary_key_table="join-pane"
 	local break_pane_flag="-b"
 	set_join_pane_secondary_bindings "$secondary_key_table" "$break_pane_flag"
-	for key in "$key_bindings"; do
+	for key in $key_bindings; do
 		tmux bind "$key" run "$CURRENT_DIR/scripts/join_pane.sh '$secondary_key_table' '$break_pane_flag'"
 	done
 }
 
 set_kill_session_binding() {
-	local key_bindings=$(get_tmux_option "$tmux_option_kill_session" "$default_key_bindings_kill_session")
+	local key_bindings="$(get_tmux_option "$tmux_option_kill_session" "$default_key_bindings_kill_session")"
+	key_bindings_disabled "$key_bindings" && return
 	local key
 	for key in $key_bindings; do
 		tmux bind "$key" run "$CURRENT_DIR/scripts/kill_session_prompt.sh '#{session_name}' '#{session_id}'"

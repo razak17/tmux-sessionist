@@ -23,7 +23,7 @@ This plugin solves the above problems.
   Faster than the built-in `prefix + s` prompt for long session lists.
 - `prefix + C` (shift + c) - prompt for creating a new session by name.
 - `prefix + X` (shift + x) - kill current session without detaching tmux.
-- `prefix + S` (shift + s) - switches to the last session.<br/>
+- `prefix + Tab` - switches to the last session.<br/>
   The same as built-in `prefix + L` that everyone seems to override with
   some other binding.
 - `prefix + @` - promote current pane into a new session.<br/>
@@ -55,6 +55,30 @@ Add this line to the bottom of `.tmux.conf`:
 
 Reload TMUX environment with `$ tmux source-file ~/.tmux.conf`. You can now use
 the plugin.
+
+### Key bindings
+
+Set any binding option before loading tmux-sessionist to replace its default
+key. Use a space-separated value to assign multiple keys, or set the value to
+`false` to disable the binding.
+
+| Option | Default | Action |
+| --- | --- | --- |
+| `@sessionist-goto` | `g` | Select and switch sessions |
+| `@sessionist-alternate` | `Tab` | Switch to the previous session |
+| `@sessionist-new` | `C` | Create a session |
+| `@sessionist-promote-pane` | `@` | Promote the current pane |
+| `@sessionist-promote-window` | `C-@` | Promote the current window |
+| `@sessionist-join-pane` | `t` | Join the marked pane |
+| `@sessionist-kill-session` | `X` | Kill the current session |
+
+For example:
+
+```tmux
+set -g @sessionist-goto 'j'
+set -g @sessionist-new 'C N'
+set -g @sessionist-kill-session 'false'
+```
 
 ### Other plugins
 
